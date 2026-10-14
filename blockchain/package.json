@@ -1,0 +1,29 @@
+{
+  "name": "crowzon-blockchain",
+  "version": "1.0.0",
+  "description": "Local Hardhat contracts for the Crowzon marketplace course project",
+  "scripts": {
+    "compile": "hardhat compile",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:native-eth": "hardhat run scripts/deploy-native-eth.js",
+    "verify:local": "hardhat run scripts/verify-local.js --network localhost",
+    "test": "hardhat test"
+  },
+  "keywords": [
+    "crowzon",
+    "hardhat",
+    "solidity"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "module",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^4.0.0",
+    "ethers": "^6.17.0",
+    "hardhat": "^3.19.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1"
+  }
+}

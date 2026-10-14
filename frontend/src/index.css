@@ -1,0 +1,77 @@
+:root {
+  font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+  color: #202b27;
+  background: #fafbf8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --ink: #202b27;
+  --ink-soft: #42504a;
+  --muted: #7d8982;
+  --line: #e8ece7;
+  --paper: #fff;
+  --canvas: #fafbf8;
+  --green: #247358;
+  --green-dark: #1d4f3e;
+  --green-soft: #e9f3ed;
+  --gold: #c18b3a;
+  --mono: 'Cascadia Code', Consolas, monospace;
+  --heading: 'Segoe UI', 'Trebuchet MS', sans-serif;
+  --shadow: 0 18px 52px rgba(34, 55, 44, 0.08);
+
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font-size: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(36, 115, 88, 0.35);
+  outline-offset: 2px;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  color: #fff;
+  background: #247358;
+}

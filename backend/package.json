@@ -1,0 +1,20 @@
+{
+  "name": "crowzon-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "db:init": "node src/init-db.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "ethers": "^6.17.0",
+    "express": "^5.1.0",
+    "pg": "^8.13.0"
+  }
+}

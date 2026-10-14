@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+artifacts/
+cache/
+typechain-types/
+deployments/
+.openzeppelin/
+backend/data/*.sqlite
+backend/data/*.sqlite-shm
+backend/data/*.sqlite-wal
