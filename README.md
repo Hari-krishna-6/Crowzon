@@ -3,57 +3,69 @@
 **Crowzon — Decentralized P2P Marketplace with Smart Contract Escrow**  
 **Trade Directly. Trust the Blockchain.**
 
-Crowzon is a college course project for direct buyer-to-seller trading. It is
-designed to use Solidity contracts on a local Hardhat blockchain. Its users and
-token balances are simulated for demonstration and testing; the project does
-not process real payments or use real cryptocurrency.
+Crowzon is a college course project for direct buyer-to-seller trading. It uses
+Solidity contracts deployed to a local Hardhat blockchain. Users and ETH are
+simulated for demonstration: this project does not process real payments, use
+real cryptocurrency, or connect to a public blockchain.
+
+## Features
+
+- Browse on-chain marketplace listings, search, and filter by category.
+- Register and sign in with a Crowzon email/password account.
+- Assign each registered user a distinct account from the local Hardhat
+  account pool; the assignment persists across sessions. The pool supports up
+  to ten users.
+- Purchase listings with simulated local ETH held in contract escrow.
+- Use Buyer Desk and Seller Studio for separate buyer and seller workflows.
+  Seller Studio shows listings linked to the authenticated Crowzon profile;
+  backend ownership and on-chain seller identity are checked independently.
+- Review transaction history in Activity and inspect live escrow records,
+  contract balance, and statuses in Escrow Vault.
+- Store off-chain profiles and listing details in the backend; listing
+  ownership, prices, payments, and escrow state remain contract-authoritative.
 
 ## Project layout
 
 - `frontend/` — React application built with Vite.
-- `blockchain/` — Hardhat project for Solidity contracts, local deployment, and
+- `blockchain/` — Hardhat project, Solidity contracts, deployment scripts, and
   contract tests.
-- `backend/` — Express REST API and persistent SQLite storage for off-chain
-  profiles and listing metadata. Blockchain payment and escrow state remains
-  exclusively in the Solidity contracts.
+- `backend/` — Express API, authentication, event indexing, and persistent
+  SQLite storage for off-chain data.
 
-## Development prerequisites
+Each workspace has its own `package.json`; run npm commands from that workspace.
+There is no root package manifest.
 
-- Node.js 24 or a compatible supported release.
-- npm.
+## Prerequisites and installation
 
-## Getting started
-
-Install each workspace's dependencies:
+Use Node.js 24 (or a compatible supported release) and npm. In PowerShell,
+install dependencies in each workspace:
 
 ```powershell
-cd frontend
-npm install
-cd ..\blockchain
-npm install
+Set-Location 'G:\Projects\P2P_Crowzon\blockchain'
+npm.cmd install
+
+Set-Location 'G:\Projects\P2P_Crowzon\backend'
+npm.cmd install
+
+Set-Location 'G:\Projects\P2P_Crowzon\frontend'
+npm.cmd install
 ```
 
-Each workspace has its own `package.json`; there is intentionally no root
-`package.json`. Run npm commands from the relevant workspace directory. For
-example, `npm.cmd run node` from the project root fails because npm cannot find a
-root manifest.
+## Run the local application on Windows
 
-## Windows local demo
+The Hardhat node is an in-memory chain. Stopping or resetting it loses its
+listings, balances, and escrow history. Keep an existing node running and do
+not redeploy if its native-ETH deployment is valid.
 
-Use separate PowerShell terminals. The Hardhat node is an in-memory chain:
-stopping it loses its listings, balances, and escrow history. Keep it running
-for the duration of a demo, and do not deploy again when its existing
-deployment is valid.
+### 1. Check or start the Hardhat node
 
-### Terminal 1: check before starting the node
-
-From any directory, check whether port 8545 is listening:
+Check whether port 8545 already has a listener:
 
 ```powershell
 Get-NetTCPConnection -LocalPort 8545 -State Listen -ErrorAction SilentlyContinue
 ```
 
-If a listener is returned, query its chain ID rather than starting another node:
+If it is listening, check the chain ID before proceeding:
 
 ```powershell
 $body = '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}'
@@ -61,93 +73,106 @@ Invoke-RestMethod -Uri 'http://127.0.0.1:8545' -Method Post `
   -ContentType 'application/json' -Body $body
 ```
 
-The expected result is `0x7a69` (decimal chain ID `31337`). If the port has no
-listener, start the node in this terminal:
+The expected chain ID is `0x7a69` (decimal `31337`). If no listener exists,
+start the local node in this terminal and leave it running:
 
 ```powershell
 Set-Location 'G:\Projects\P2P_Crowzon\blockchain'
 npm.cmd run node
 ```
 
-Leave this terminal running. If port 8545 is occupied but does not answer as
-expected, investigate the listener; do not start another node on that port.
+Do not start a second node if port 8545 is already occupied.
 
-### Before deploying: preserve an existing deployment
+### 2. Confirm the native-ETH deployment
 
-In another terminal, inspect the deployment artifact and confirm the RPC still
-reports chain ID 31337. The frontend uses
-`blockchain\deployments\localhost.json`; its recorded addresses must have
-contract bytecode on the current node. Do **not** run deployment as a routine
-startup step: `deploy:local` overwrites this artifact and deploys new contracts.
+The application reads contract addresses from
+`blockchain\deployments\localhost-native-eth.json`. Before deploying, confirm
+that the artifact matches the running chain and that its addresses contain
+contract bytecode. The legacy CVT deployment in
+`blockchain\deployments\localhost.json` is separate and must not be treated as
+the native-ETH deployment.
 
-Only after intentionally starting a fresh node (or intentionally recreating the
-deployment), deploy from the blockchain directory:
+Deployment is not a routine startup step. Only when intentionally deploying to
+a fresh local node, run from the blockchain workspace:
 
 ```powershell
 Set-Location 'G:\Projects\P2P_Crowzon\blockchain'
-npm.cmd run deploy:local
-npm.cmd run verify:local
+npm.cmd run deploy:native-eth -- --network localhost
 ```
 
-The verification command submits local demo transactions. Run it only when you
-intend to create that verification history. Never use a public network or real
-funds.
+This writes the separate native-ETH artifact after deployment verification.
+Never use a public network or real funds.
 
-### Terminal 2: start the frontend
+### 3. Start the backend
+
+In a separate terminal:
+
+```powershell
+Set-Location 'G:\Projects\P2P_Crowzon\backend'
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+npm.cmd run db:init
+npm.cmd start
+```
+
+The API defaults to `http://127.0.0.1:3000`; `GET /api/health` reports its
+status. SQLite data is stored in `backend\data\crowzon.sqlite` by default and
+is ignored by Git. The backend connects to the local RPC at
+`http://127.0.0.1:8545` to validate account assignments and index contract
+events. See [backend documentation](backend/README.md) for configuration and
+API details.
+
+### 4. Start the frontend
+
+In another terminal:
 
 ```powershell
 Set-Location 'G:\Projects\P2P_Crowzon\frontend'
 npm.cmd run dev -- --host 127.0.0.1
 ```
 
-Open [http://127.0.0.1:5173/](http://127.0.0.1:5173/). Confirm the page reports
-“Connected to local Hardhat” and “Chain 31337”. The frontend proxies RPC
-requests to `http://127.0.0.1:8545`; it reads addresses from the deployment
-artifact and ABIs from generated Hardhat artifacts.
+Open [http://127.0.0.1:5173/](http://127.0.0.1:5173/). Vite proxies `/api` to
+the backend and `/rpc` to the local Hardhat node. Restart Vite after an
+intentional deployment so it reloads the deployment artifact and generated
+contract ABIs.
 
-Run blockchain commands such as `npm.cmd run compile`, `npm.cmd test`,
-`npm.cmd run deploy:local`, and `npm.cmd run verify:local` from
-`G:\Projects\P2P_Crowzon\blockchain`. Run `npm.cmd run build`, `npm.cmd run lint`,
-and `npm.cmd run dev -- --host 127.0.0.1` from
-`G:\Projects\P2P_Crowzon\frontend`.
+## Authentication and local accounts
 
-If the node is stopped or reset, its in-memory state is lost. Start a fresh node,
-deploy again intentionally, then recreate showcase listings through the
-frontend. Restart Vite after redeployment so it reads the refreshed deployment
-artifact. Do not stop or restart the node to troubleshoot the frontend.
+Crowzon authentication is separate from blockchain identity. Sign in or
+register through the frontend; the backend assigns the authenticated user one
+of the ten accounts returned by the local Hardhat RPC and persists that
+assignment. Existing users retain their assignments across login and logout.
+Registration is rejected if the account pool is full or unavailable. The
+frontend does not contain development private keys.
 
-Use only local development accounts and the local Hardhat chain for this
-course-project demo. Never put development private keys or `.env` files into
-source control, and do not connect this project to a public network or real
-funds.
+Seller Studio uses authenticated backend listing ownership for its list and
+checks that the assigned account also matches the on-chain seller before
+allowing contract management. Older listings whose backend owner and on-chain
+seller differ are not silently reassigned; management is disabled for those
+records. This local account assignment is not protection against someone with
+direct access to the development RPC, whose unlocked accounts can submit
+transactions independently of the web application.
 
-## Backend API
+## Checks
 
-From a separate PowerShell terminal:
+Run tests and builds from the applicable workspace:
 
 ```powershell
-Set-Location 'G:\Projects\P2P_Crowzon\backend'
-npm.cmd install
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-npm.cmd run db:init
+Set-Location 'G:\Projects\P2P_Crowzon\blockchain'
 npm.cmd test
-npm.cmd start
+
+Set-Location 'G:\Projects\P2P_Crowzon\backend'
+npm.cmd test
+
+Set-Location 'G:\Projects\P2P_Crowzon\frontend'
+npm.cmd test
+npm.cmd run lint
+npm.cmd run build
 ```
 
-The API defaults to `http://127.0.0.1:3000`; check `GET /api/health`. SQLite is
-stored in `backend/data/crowzon.sqlite` by default and is ignored by Git. Set
-`PORT` or `SQLITE_PATH` in `backend/.env` to override the defaults. Register or
-sign in in the frontend to create or manage off-chain listing metadata. The API
-uses password hashes and HttpOnly session cookies; authenticated users can
-modify only metadata they own. Public product/profile reads remain available.
-The frontend proxies `/api` to the backend and scopes metadata by
-`(deploymentId, chainId, marketplaceAddress, listingId)`. On-chain ownership,
-price, listing state, CVT, and escrow remain contract-authoritative. A Crowzon
-login does not verify the selected local wallet or authorize its blockchain
-actions; wallet association is unverified profile data. On startup the backend
-also reads and indexes marketplace/escrow events from the local deployment
-artifact and ABIs using a read-only provider (`RPC_URL`, default
-`http://127.0.0.1:8545`). The Activity view can display persistent indexed
-receipts; current escrow states continue to come from the contract. Orders API
-queries require sign-in and an explicit session profile address association.
-The address is not verified and is never accepted as proof of ownership.
+## Safety
+
+This project is for a local course demonstration only. Local ETH is simulated
+and has no intended real-world value. Do not connect to a public network, use
+real funds, commit `.env` files, or add private keys to source code. The
+Hardhat node and Vite RPC proxy must remain local and must not be exposed as
+public services.
