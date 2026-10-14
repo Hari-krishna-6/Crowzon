@@ -8,6 +8,9 @@ Solidity contracts deployed to a local Hardhat blockchain. Users and ETH are
 simulated for demonstration: this project does not process real payments, use
 real cryptocurrency, or connect to a public blockchain.
 
+For the complete implementation-level technical report, see
+[TECHNICAL_DOCUMENTATION.md](./TECHNICAL_DOCUMENTATION.md).
+
 ## Features
 
 - Browse on-chain marketplace listings, search, and filter by category.

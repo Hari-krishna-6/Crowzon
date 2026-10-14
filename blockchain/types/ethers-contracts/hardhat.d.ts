@@ -10,23 +10,23 @@ import * as Contracts from "./index.js";
 
 declare module "@nomicfoundation/hardhat-ethers/types" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
-  getContractFactory(name: 'CrowzonEscrow', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.CrowzonEscrow__factory>
-getContractFactory(name: 'CrowzonToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.CrowzonToken__factory>
+  getContractFactory(name: 'CrowzonToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.CrowzonToken__factory>
+getContractFactory(name: 'CrowzonEscrow', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.CrowzonEscrow__factory>
 getContractFactory(name: 'CrowzonMarketplace', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.CrowzonMarketplace__factory>
 getContractFactory(name: 'ReentrantTestToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.ReentrantTestToken__factory>
 
-  getContractAt(name: 'CrowzonEscrow', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.CrowzonEscrow>
-getContractAt(name: 'CrowzonToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.CrowzonToken>
+  getContractAt(name: 'CrowzonToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.CrowzonToken>
+getContractAt(name: 'CrowzonEscrow', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.CrowzonEscrow>
 getContractAt(name: 'CrowzonMarketplace', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.CrowzonMarketplace>
 getContractAt(name: 'ReentrantTestToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.ReentrantTestToken>
 
-  deployContract(name: 'CrowzonEscrow', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonEscrow>
-deployContract(name: 'CrowzonToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonToken>
+  deployContract(name: 'CrowzonToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonToken>
+deployContract(name: 'CrowzonEscrow', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonEscrow>
 deployContract(name: 'CrowzonMarketplace', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonMarketplace>
 deployContract(name: 'ReentrantTestToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.ReentrantTestToken>
 
-  deployContract(name: 'CrowzonEscrow', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonEscrow>
-deployContract(name: 'CrowzonToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonToken>
+  deployContract(name: 'CrowzonToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonToken>
+deployContract(name: 'CrowzonEscrow', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonEscrow>
 deployContract(name: 'CrowzonMarketplace', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.CrowzonMarketplace>
 deployContract(name: 'ReentrantTestToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.ReentrantTestToken>
 
